@@ -63,4 +63,4 @@ The only way code makes it into master in the main repo is if we merge a PR.
 
 > Modus Create team members should refer to [ModusCreateOrg GitHub Guidelines](https://docs.google.com/document/d/1eBFta4gP3-eZ4Gcpx0ww9SHAH6GrOoPSLmTFZ7R8foo/edit#heading=h.sjyqpqnsjmjl)
 
-
+Enjoy the game!
