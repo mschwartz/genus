@@ -11,6 +11,7 @@
 
 /*************************************************************************/
 
+
 class BuildingLights : public BProcess {
 public:
   BuildingLights() : BProcess() {
@@ -55,11 +56,12 @@ public:
 
 public:
   TBool RunBefore() {
-    if (--mTimer < 0) {
-      mTimer  = TIME;
-      mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
-      mColor2 = mColor2 == COLOR2 ? COLOR1 : COLOR2;
+    if (--mTimer >= 0) {
+      return ETrue;
     }
+    mTimer  = TIME;
+    mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
+    mColor2 = mColor2 == COLOR1 ? COLOR2 : COLOR1;
     TRGB color1(mColor1);
     gDisplay.renderBitmap->SetColor(COLOR_INDEX1, color1);
     TRGB color2(mColor2);
@@ -102,6 +104,7 @@ public:
     TRGB color1(mColor1);
     gDisplay.renderBitmap->SetColor(COLOR_INDEX1, color1);
     TRGB color2(mColor2);
+    gDisplay.renderBitmap->SetColor(COLOR_INDEX2, color2);
     return ETrue;
   }
 
@@ -168,14 +171,14 @@ private:
   static const TInt16  COLOR_INDEX2 = 42;
   static const TInt16  COLOR_INDEX3 = 43;
   static const TInt16  COLOR_INDEX4 = 44;
-  static const TUint32 COLOR1       = 0xA52131;
-  static const TUint32 COLOR2       = 0x180810;
-  static const TUint32 COLOR3       = 0xB55218;
-  static const TUint32 COLOR4       = 0x180810;
-  static const TUint32 COLOR5       = 0xB55218;
-  static const TUint32 COLOR6       = 0x180810;
+  static const TUint32 COLOR1       = 0x180810;
+  static const TUint32 COLOR2       = 0x080008;
+  static const TUint32 COLOR3       = 0x4A1018;
+  static const TUint32 COLOR4       = 0x080008;
+  static const TUint32 COLOR5       = 0xA52131;
+  static const TUint32 COLOR6       = 0x4A1018;
   static const TUint32 COLOR7       = 0xB55218;
-  static const TUint32 COLOR8       = 0x180810;
+  static const TUint32 COLOR8       = 0x4A1018;
 };
 
 /*************************************************************************/
@@ -195,16 +198,13 @@ public:
       mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
       mColor2 = mColor2 == COLOR3 ? COLOR4 : COLOR3;
       mColor3 = mColor3 == COLOR5 ? COLOR6 : COLOR5;
-      mColor4 = mColor4 == COLOR7 ? COLOR8 : COLOR7;
       mTimer  = mColor1 == COLOR1 ? TIME1 : TIME2;
     }
     TRGB color(mColor1);
     gDisplay.renderBitmap->SetColor(COLOR_INDEX1, color);
     color.Set(mColor2);
-    gDisplay.renderBitmap->SetColor(COLOR_INDEX2, color);
-    color.Set(mColor3);
     gDisplay.renderBitmap->SetColor(COLOR_INDEX3, color);
-    color.Set(mColor4);
+    color.Set(mColor3);
     gDisplay.renderBitmap->SetColor(COLOR_INDEX4, color);
     return ETrue;
   }
@@ -215,22 +215,20 @@ public:
 
 private:
   TInt       mTimer;
-  const TInt TIME1                  = 5 * 30; // 5 seconds
-  const TInt TIME2                  = 1 * 30; //  1 second
+  const TInt TIME1                  = 20 * 30; // 5 seconds
+  const TInt TIME2                  = 2 * 30; //  1 second
 
   TUint32              mColor1, mColor2, mColor3, mColor4;
   static const TInt16  COLOR_INDEX1 = 45;
-  static const TInt16  COLOR_INDEX2 = 46;
+  static const TInt16  COLOR_INDEX2 = 46; // no color change
   static const TInt16  COLOR_INDEX3 = 47;
   static const TInt16  COLOR_INDEX4 = 48;
-  static const TUint32 COLOR1       = 0xA52131;
-  static const TUint32 COLOR2       = 0x180810;
-  static const TUint32 COLOR3       = 0xB55218;
-  static const TUint32 COLOR4       = 0x180810;
-  static const TUint32 COLOR5       = 0xB55218;
-  static const TUint32 COLOR6       = 0x180810;
-  static const TUint32 COLOR7       = 0xB55218;
-  static const TUint32 COLOR8       = 0x180810;
+  static const TUint32 COLOR1       = 0x213942;
+  static const TUint32 COLOR2       = 0x21524A;
+  static const TUint32 COLOR3       = 0x21524A;
+  static const TUint32 COLOR4       = 0x213942;
+  static const TUint32 COLOR5       = 0x213942;
+  static const TUint32 COLOR6       = 0x21524A;
 };
 
 /*************************************************************************/
@@ -262,10 +260,17 @@ GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
 
   mGameEngine = aGameEngine;
   mTextColor  = 0;
+  mGameEngine->AddProcess(new BuildingLights());
+  mGameEngine->AddProcess(new TowersLights());
+  mGameEngine->AddProcess(new ModusNeonLamp());
+  mGameEngine->AddProcess(new BottleNeonLamp());
+  mGameEngine->AddProcess(new ModusEasterEgg());
 }
 
 GLevelCyberpunk::~GLevelCyberpunk() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  gProcessList.Genocide();
+
 #ifndef STATIC_GAME_BACKGROUNDS
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
@@ -273,37 +278,37 @@ GLevelCyberpunk::~GLevelCyberpunk() {
 }
 
 
-  void GLevelCyberpunk::Animate() {
+void GLevelCyberpunk::Animate() {
 #ifndef STATIC_GAME_BACKGROUNDS
-    bgOffset0 += .01;
-    if ((int)bgOffset0 >= mBackground0->Width()) {
-      bgOffset0= 0;
-    }
-
-    bgOffset1 += .025;
-    if ((int)bgOffset1 >= mBackground1->Width()) {
-      bgOffset1 = 0;
-    }
-
-    bgOffset2 += .08;
-    if ((int)bgOffset2 >= mBackground2->Width()) {
-      bgOffset2 = 0;
-    }
-#endif
-
+  bgOffset0 += .01;
+  if ((int)bgOffset0 >= mBackground0->Width()) {
+    bgOffset0= 0;
   }
 
-  void GLevelCyberpunk::Render() {
+  bgOffset1 += .025;
+  if ((int)bgOffset1 >= mBackground1->Width()) {
+    bgOffset1 = 0;
+  }
+
+  bgOffset2 += .08;
+  if ((int)bgOffset2 >= mBackground2->Width()) {
+    bgOffset2 = 0;
+  }
+#endif
+
+}
+
+void GLevelCyberpunk::Render() {
 
 //  memset(gDisplay.renderBitmap->>GetPixels(), 25, 320 * 135);
 #ifdef STATIC_GAME_BACKGROUNDS
-    gDisplay.renderBitmap->CopyPixels(mBackground0);
+  gDisplay.renderBitmap->CopyPixels(mBackground0);
 #else
-    DrawScrolledBackground(mBackground0, bgOffset0, 0);
-    DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue);
-    DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->>Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
+  DrawScrolledBackground(mBackground0, bgOffset0, 0);
+  DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue);
+  DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->>Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
 #endif
 
-    mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
-  }
+  mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
+}
 

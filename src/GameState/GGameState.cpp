@@ -134,6 +134,7 @@ void GGameState::LoadLevel() {
     // difficulty
     // TODO: Jay tweak until you are satisfied!
     mBlocksThisLevel = 20 + mLevel*5 + gOptions->difficulty * 10;
+    mBlocksThisLevel = 10;
     switch(gOptions->difficulty) {
       case DIFFICULTY_EASY:
         mBonusTime = 20 * 30;
@@ -146,7 +147,8 @@ void GGameState::LoadLevel() {
         break;
     }
     //
-    switch ((mLevel / 5) % 5) {
+    printf("mLevel %d\n", (mLevel/5)%6);
+    switch ((mLevel / 5) % 6) {
       case 0:
         mPlayfield = new GLevelCountryside(this);
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
@@ -277,7 +279,12 @@ void GGameState::RenderMovesLeft() {
 // render on top of the background
 void GGameState::PostRender() {
   if (!mGameOver && mBlocksRemaining < 1) {
-    mLevel++;
+    if (mLevel < 24) {
+      mLevel = 24;
+    }
+    else {
+      mLevel++;
+    }
     LoadLevel();
   }
   //
