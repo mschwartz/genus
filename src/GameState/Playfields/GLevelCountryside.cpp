@@ -54,7 +54,6 @@ GLevelCountryside::~GLevelCountryside()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 #else
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-#ifndef STATIC_GAME_BACKGROUNDS
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
@@ -115,4 +114,3 @@ void GLevelCountryside::Render() {
 #endif
   mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
-

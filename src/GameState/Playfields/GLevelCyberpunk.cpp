@@ -274,7 +274,6 @@ GLevelCyberpunk::~GLevelCyberpunk()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gProcessList.Genocide();
 
-#ifndef STATIC_GAME_BACKGROUNDS
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
 #endif
