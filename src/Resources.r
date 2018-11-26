@@ -9,6 +9,7 @@ BITMAP credits1.bmp
 BITMAP game_over1.bmp
 BITMAP game_over_sprites1.bmp
 BITMAP high_scores1.bmp
+BITMAP high_scores_animation1.bmp
 BITMAP main_menu1.bmp
 BITMAP main_options1.bmp
 BITMAP main_options_reset1.bmp
@@ -79,3 +80,5 @@ RAW SFX_good_drop_block.wav
 RAW SFX_bad_drop_block.wav
 RAW SFX_move_block.wav
 RAW SFX_score_combo.wav
+RAW SFX_option_select.wav
+RAW SFX_explode_block.wav

@@ -50,6 +50,9 @@ GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
 }
 
 GLevelCountryside::~GLevelCountryside()  {
+#ifdef STATIC_GAME_BACKGROUNDS
+  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+#else
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 #ifndef STATIC_GAME_BACKGROUNDS
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);

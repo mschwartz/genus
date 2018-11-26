@@ -267,7 +267,10 @@ GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
   mGameEngine->AddProcess(new ModusEasterEgg());
 }
 
-GLevelCyberpunk::~GLevelCyberpunk() {
+GLevelCyberpunk::~GLevelCyberpunk()  {
+#ifdef STATIC_GAME_BACKGROUNDS
+  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+#else
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gProcessList.Genocide();
 
