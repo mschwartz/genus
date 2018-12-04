@@ -7,36 +7,46 @@
 #include "GResources.h"
 
 #define DISABLE_AUDIO
-#undef DISABLE_AUDIO
+//#undef DISABLE_AUDIO
 
 
 GSoundPlayer gSoundPlayer;
 
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
+#ifndef DISABLE_AUDIO
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
 
   PlayMusic(EMPTYSONG_XM);
   SetMusicVolume(gOptions->music);
   SetEffectsVolume(gOptions->sfx);
+#endif
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
+#ifndef DISABLE_AUDIO
   TBool music = BSoundPlayer::PlayMusic(aResourceId);
   MuteMusic(gOptions->muted);
   return music;
+#else
+  return ETrue;
+#endif
 }
 
 TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
-
+#ifndef DISABLE_AUDIO
   gResourceManager.ReleaseRawSlot(SONG_SLOT);
 
   gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
   BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
 
   return LoadSong(song);
+#else
+  return ETrue;
+#endif
 }
 
 TBool GSoundPlayer::LoadEffects() {
+#ifndef DISABLE_AUDIO
   // Load effects
   const uint16_t mEffectsList[] = {
     SFX_GOOD_DROP_BLOCK_WAV,
@@ -52,6 +62,7 @@ TBool GSoundPlayer::LoadEffects() {
   for (uint8_t i = 0; i < 8; i++) {
     LoadEffect(mEffectsList[i], i);
   }
+#endif
   return ETrue;
 }
 

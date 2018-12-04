@@ -8,22 +8,22 @@
 
 // BBitmap Slots
 enum {
-  BKG_SLOT,
-  BKG2_SLOT,
-  BKG3_SLOT,
-  BKG4_SLOT,
-  BKG5_SLOT,
-  BKG6_SLOT,
+  BKG_SLOT,                     // 0
+  BKG2_SLOT,                    // 1
+  BKG3_SLOT,                    // 2
+  BKG4_SLOT,                    // 3
+  BKG5_SLOT,                    // 4
+  BKG6_SLOT,                    // 5
 
-  PLAYER_SLOT,
-  COMMON_SLOT,
+  PLAYER_SLOT,                  // 6
+  COMMON_SLOT,                  // 7
 // Font Slots
-  FONT_8x8_SLOT,
-  FONT_16x16_SLOT,
+  FONT_8x8_SLOT,                // 8
+  FONT_16x16_SLOT,              // 9
 
-  GAME_OVER_SLOT,
-  CREDITS_TEAM_SLOT,
-  CREDITS_MODUS_LABS_SLOT,
+  GAME_OVER_SLOT,               // 10
+  CREDITS_TEAM_SLOT,            // 11
+  CREDITS_MODUS_LABS_SLOT,      // 12
 };
 
 // BRaw slots
@@ -50,10 +50,10 @@ static const TUint16 IMG_FRAMER  = 15;
 // COMMON.BMP
 static const TUint16 IMG_POWERUP_MODUS_BOMB = 16;  // m bomb
 static const TUint16 IMG_POWERUP_COLORSWAP  = 24;
-static const TUint16 IMG_LASSO_UL = 8;
-static const TUint16 IMG_LASSO_UR = 9;
-static const TUint16 IMG_LASSO_LL = 10;
-static const TUint16 IMG_LASSO_LR = 11;
+static const TUint16 IMG_LASSO_UL           = 8;
+static const TUint16 IMG_LASSO_UR           = 9;
+static const TUint16 IMG_LASSO_LL           = 10;
+static const TUint16 IMG_LASSO_LR           = 11;
 
 // SPLASH_SPRITES.BMP
 static const TUint16 IMG_DROP1 = 0;
@@ -77,17 +77,13 @@ static const TUint8 COLOR_TIMER_INNER  = 250;
 static const TUint8 COLOR_TIMER_BORDER = 251;
 
 // user interface/widgets colors
-static const TUint8 LASSO_1 = 247;
-static const TUint8 LASSO_2 = 248;
+static const TUint8 LASSO_1           = 247;
+static const TUint8 LASSO_2           = 248;
 static const TUint8 COLOR_DIALOG_BG   = 249;
 static const TUint8 COLOR_DIALOG_FG   = 250;
 static const TUint8 COLOR_MENU_TITLE  = 251;
 static const TUint8 COLOR_TEXT        = 252;
 static const TUint8 COLOR_TEXT_SHADOW = 253;
 static const TUint8 COLOR_TEXT_BG     = 254;
-
-// special characters
-static const char *STR_LEFT_ARROW  = "\xf";
-static const char *STR_RIGHT_ARROW = "\xe";
 
 #endif //GRESOURCES_H

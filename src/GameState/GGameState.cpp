@@ -8,6 +8,8 @@
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
+#define DEBUGME
+#undef DEBUGME
 
 /***************************
 **DEBUG CODE PLEASE REMOVE**
@@ -159,8 +161,10 @@ void GGameState::PreRender() {
  ****************************************************************************************************************/
 
 void GGameState::LoadLevel() {
+#ifdef DEBUGME
+  printf("LoadLevel(%d) Free Memory %d\n", mLevel, AvailMem(MEMF_SLOW));
+#endif
   if ((mLevel % 5) == 1) {  // every 5th level
-    delete mPlayfield;
     // difficulty
     // TODO: Jay tweak until you are satisfied!
     mBlocksThisLevel = 20 + mLevel*5 + gOptions->difficulty * 10;
@@ -177,38 +181,59 @@ void GGameState::LoadLevel() {
     }
 
     // Release only if bitmap was loaded
+#ifdef DEBUGME
+    printf("delete mPlayfield\n");
+#endif
+    delete mPlayfield;
     if (gResourceManager.GetBitmap(PLAYER_SLOT)) {
       gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
     }
 
     switch ((mLevel / 5) % 6) {
       case 0:
+#ifdef DEBUGME
+        printf("GLevelCountryxide\n");
+#endif
         mPlayfield = new GLevelCountryside(this);
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
         break;
       case 1:
+#ifdef DEBUGME
+        printf("GLevelUnderWater1\n");
+#endif
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 2:
+#ifdef DEBUGME
+        printf("GLevelGlacialMountains\n");
+#endif
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
         break;
       case 3:
-        // TODO: @Jay???
+#ifdef DEBUGME
+        printf("GLevelUnderWaterFantasy\n");
+#endif
         mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 4:
+#ifdef DEBUGME
+        printf("GLevelCyberpunk\n");
+#endif
         mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
         break;
       case 5:
+#ifdef DEBUGME
+        printf("GLevelSpace\n");
+#endif
         mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
@@ -216,16 +241,16 @@ void GGameState::LoadLevel() {
       default:
         Panic("LoadLevel invalid level\n");
     }
-  }
-  BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  // TODO: Jay - this logic can be moved to BPlayfield children
-  // this assumes BKG_SLOT bmp has the correct palette for the display
-  gDisplay.SetPalette(mBackground, 0, 128);
-  gDisplay.SetPalette(playerBitmap, 128, 128);
-  gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
-  gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
+    BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    // TODO: Jay - this logic can be moved to BPlayfield children
+    // this assumes BKG_SLOT bmp has the correct palette for the display
+    gDisplay.SetPalette(mBackground, 0, 128);
+    gDisplay.SetPalette(playerBitmap, 128, 128);
+    gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+    gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
 
+  }
   mBlocksRemaining = mBlocksThisLevel;
 }
 
