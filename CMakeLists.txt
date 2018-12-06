@@ -90,7 +90,7 @@ add_executable(
     ${LIBXMP_SRC}
     ${CREATIVE_ENGINE}
     ${GENUS_SRC}
-)
+    )
 
 # make genus.app
 if (APPLE)
